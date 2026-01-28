@@ -15,12 +15,12 @@ datasource db {
 // add cart -> check cookie -> token exists -> add to the same cart
 // add cart -> check cookie -> not exists -> create new token -> add to new cart
 model GuestSession {
-  id         String   @id @default(cuid())
-  email      String?
-  token      String   @unique
-  expired_at DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id        String   @id @default(cuid())
+  email     String?
+  token     String   @unique
+  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   orders Order[]
 
@@ -28,49 +28,49 @@ model GuestSession {
 }
 
 model Order {
-  id                       String        @id @default(cuid())
+  id                    String        @id @default(cuid())
   // token <-> settionId -> remain cart
-  guest_session_id         String?
+  guestSessionId        String?
   // remain Order data except guestSession of null
-  guest_session            GuestSession? @relation(fields: [guest_session_id], references: [id], onDelete: SetNull)
-  status                   OrderStatus   @default(PENDING)
-  total_amount             Int
-  customer_email           String
-  customer_name            String
+  guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
+  status                OrderStatus   @default(PENDING)
+  totalAmount           Int           @map("total_amount")
+  customerEmail         String        @map("customer_email")
+  customerName          String        @map("customer_name")
   // paid -> success -> stripe return Id
-  stripe_payment_intent_id String
+  stripePaymentIntentId String        @map("stripe_payment_intent_id")
 
   // item -< orderItems
-  items      OrderItem[]
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
+  items     OrderItem[]
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
 
   // Search Index
-  @@index([guest_session_id])
+  @@index([guestSessionId])
   @@index([status])
-  @@index([customer_email])
-  @@index([created_at])
+  @@index([customerEmail])
+  @@index([createdAt])
   @@map("orders")
 }
 
 // Which item and who order come from?
 model OrderItem {
   /// アイテムID（CUID）
-  id       String @id @default(cuid())
-  order_id String
-  order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid())
+  orderId String @map("order_id")
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   // Snap shot
-  product_id   String
-  product_name String
+  productId   String @map("product_id")
+  productName String @map("product_name")
 
   quantity Int
   price    Int
 
-  created_at DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
 
   /// 検索用インデックス
-  @@index([order_id])
+  @@index([orderId])
   @@map("order_items")
 }
 
@@ -85,16 +85,16 @@ enum OrderStatus {
 model Admin {
   id String @id @default(uuid())
 
-  email         String @unique
-  password_hash String
+  email        String @unique
+  passwordHash String @map("password_hash")
 
-  name       String
-  role       AdminRole @default(ADMIN)
+  name      String
+  role      AdminRole @default(ADMIN)
   /// 作成日時
-  created_at DateTime  @default(now())
+  createdAt DateTime  @default(now()) @map("created_at")
 
   /// 更新日時
-  updated_at DateTime @updatedAt
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([email])
   @@map("admins")
