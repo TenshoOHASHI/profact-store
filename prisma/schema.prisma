@@ -31,7 +31,7 @@ model Order {
   guestSessionId        String?
   //　remain Order data except guestSession of null
   guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
-  status                OrderStatus   @default(PENDIMG)
+  status                OrderStatus   @default(PENDING)
   totalAmount           Int
   customerEmail         String
   customerName          String
@@ -74,10 +74,10 @@ model OrderItem {
 
 // state transition of order
 enum OrderStatus {
-  PENDIMG
+  PENDING
   PAID
   FAILED
-  REFUNED
+  REFUNDED
 }
 
 model Admin {
