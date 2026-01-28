@@ -11,3 +11,94 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// add cart -> check cookie -> token exists -> add to the same cart
+// add cart -> check cookie -> not exists -> create new token -> add to new cart
+model GuestSession {
+  id        String   @id @default(cuid())
+  email     String?
+  token     String   @unique
+  expiredAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Order {
+  id                    String        @id @default(cuid())
+  // token <-> settionId -> remain cart
+  guestSessionId        String?
+  //　remain Order data except guestSession of null
+  guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
+  status                OrderStatus   @default(PENDIMG)
+  totalAmount           Int
+  customerEmail         String
+  customerName          String
+  // paid -> succesd -> stripe return Id
+  stripePaymentIntendId String
+
+  // item -< orderItems
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Search Index
+  @@index([guestSessionId])
+  @@index([status])
+  @@index([customerEmail])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+// Which item and who order come from?
+model OrderItem {
+  /// アイテムID（CUID）
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // Snap shot
+  productId   String
+  productName String
+
+  quantity Int
+  price    Int
+
+  createdAt DateTime @default(now())
+
+  /// 検索用インデックス
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// state transition of order
+enum OrderStatus {
+  PENDIMG
+  PAID
+  FAILED
+  REFUNED
+}
+
+model Admin {
+  id String @id @default(uuid())
+
+  email        String @unique
+  passwordHash String
+
+  name      String
+  role      AdminRole @default(ADMIN)
+  /// 作成日時
+  createdAt DateTime  @default(now())
+
+  /// 更新日時
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@map("admins")
+}
+
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+}
