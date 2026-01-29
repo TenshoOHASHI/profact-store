@@ -1,7 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
+const connectionString = `${process.env.DATABASE_URL}`;
+const adapter = new PrismaPg({ connectionString });
 const prismaClientSingleton = () => {
   return new PrismaClient({
+    adapter: adapter,
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
@@ -28,7 +32,7 @@ export async function testDatabaseConnection(): Promise<boolean> {
     console.log("Database connected successfully");
     return true;
   } catch (error) {
-    console.error("❌ Database connection failed:", error);
+    console.error("Database connection failed:", error);
     return false;
   } finally {
     await prisma.$disconnect();
