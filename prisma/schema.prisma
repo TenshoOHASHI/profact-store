@@ -11,3 +11,96 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// add cart -> check cookie -> token exists -> add to the same cart
+// add cart -> check cookie -> not exists -> create new token -> add to new cart
+model GuestSession {
+  id        String   @id @default(cuid())
+  email     String?
+  token     String   @unique
+  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("guest_sessions")
+}
+
+model Order {
+  id                    String        @id @default(cuid())
+  // token <-> settionId -> remain cart
+  guestSessionId        String?
+  // remain Order data except guestSession of null
+  guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
+  status                OrderStatus   @default(PENDING)
+  totalAmount           Int           @map("total_amount")
+  customerEmail         String        @map("customer_email")
+  customerName          String        @map("customer_name")
+  // paid -> success -> stripe return Id
+  stripePaymentIntentId String        @map("stripe_payment_intent_id")
+
+  // item -< orderItems
+  items     OrderItem[]
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  // Search Index
+  @@index([guestSessionId])
+  @@index([status])
+  @@index([customerEmail])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+// Which item and who order come from?
+model OrderItem {
+  /// アイテムID（CUID）
+  id      String @id @default(cuid())
+  orderId String @map("order_id")
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // Snap shot
+  productId   String @map("product_id")
+  productName String @map("product_name")
+
+  quantity Int
+  price    Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// 検索用インデックス
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// state transition of order
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Admin {
+  id String @id @default(uuid())
+
+  email        String @unique
+  passwordHash String @map("password_hash")
+
+  name      String
+  role      AdminRole @default(ADMIN)
+  /// 作成日時
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  /// 更新日時
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@map("admins")
+}
+
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+}
