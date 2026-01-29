@@ -18,13 +18,14 @@
         "name": "next",
       },
     ],
+
     "paths": {
       "@/*": ["./src/*"],
-      "@/domain/*": ["./src/domain/*"],
-      "@/infrastructure/*": ["./src/infrastructure/*"],
-      "@/application/*": ["./src/application/*"],
-      "@/presentation/*": ["./src/presentation/*"],
-      "@/shared/*": ["./src/shared/*"],
+      // "@/domain/*": ["./src/domain/*"],
+      // "@/infrastructure/*": ["./src/infrastructure/*"],
+      // "@/application/*": ["./src/application/*"],
+      // "@/presentation/*": ["./src/presentation/*"],
+      // "@/shared/*": ["./src/shared/*"],
     },
   },
   "include": [
