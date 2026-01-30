@@ -6,11 +6,7 @@ export default defineConfig({
     globals: true,
     environment: "node",
   },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
+
   define: {
     "global.URL": "URL",
   },
