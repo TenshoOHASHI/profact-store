@@ -1,6 +1,1 @@
-// export interface OrderItemProps {
-//   productId: string;
-//   productName: string;
-//   quantity: string;
-//   unitPrice: Money;
-// }
+// TODO: #16 注文機能の実装時に定義する

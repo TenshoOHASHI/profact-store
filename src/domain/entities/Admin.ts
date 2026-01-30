@@ -1,4 +1,1 @@
-// export enum AdminRole {
-//   ADMIN = "ADMIN",
-//   SUPER_ADMIN = "SUPER_ADMIN",
-// }
+// TODO: #16 管理者機能・権限管理の実装時に定義する
