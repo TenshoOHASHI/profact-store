@@ -25,16 +25,3 @@ if (process.env.NODE_ENV !== "production") {
   // Cache in global scope during development to prevent connection pool growth
   global.prisma = prisma;
 }
-
-export async function testDatabaseConnection(): Promise<boolean> {
-  try {
-    await prisma.$connect();
-    console.log("Database connected successfully");
-    return true;
-  } catch (error) {
-    console.error("Database connection failed:", error);
-    return false;
-  } finally {
-    await prisma.$disconnect();
-  }
-}
