@@ -46,3 +46,8 @@ next-env.d.ts
 # test files
 #*.test.ts
 #__tests__/
+
+# test data
+*.test-data.ts
+*.test-data.js
+/test-data/

@@ -19,7 +19,7 @@ export class ValidationError extends DomainError {
   }
 }
 
-//　注文数、在庫数、
+//　注文数、在庫数
 export class BusinessRuleError extends DomainError {
   constructor(
     message: string,
