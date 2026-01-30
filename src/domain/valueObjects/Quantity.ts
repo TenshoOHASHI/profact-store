@@ -20,7 +20,7 @@ export class Quantity {
     }
     if (numValue > this.MAX_VALUE) {
       throw new ValidationError(
-        `数量は${this.MIN_VALUE}以下で入力してください`,
+        `数量は${this.MAX_VALUE}以下で入力してください`,
         "value",
       );
     }

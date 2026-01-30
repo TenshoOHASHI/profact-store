@@ -1,4 +1,5 @@
 import { ValidationError } from "./DomainError";
+import { Quantity } from "./Quantity";
 
 export class Money {
   // Encapusulation
@@ -23,8 +24,9 @@ export class Money {
     return new Money(this._value + other._value);
   }
 
-  multiply(multiply: Money): Money {
-    return new Money(this._value * multiply._value);
+  // money x quantity
+  multiply(quantity: Quantity): Money {
+    return new Money(this._value * quantity.value);
   }
 
   equals(other: Money): boolean {

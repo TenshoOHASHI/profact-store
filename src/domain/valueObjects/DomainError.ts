@@ -28,6 +28,6 @@ export class BusinessRuleError extends DomainError {
     //
     public readonly details?: Record<string, unknown>,
   ) {
-    super(message, `BUSINESS_RULE_ERROR_$(ruleName)`, field);
+    super(message, `BUSINESS_RULE_ERROR_${ruleName}`, field);
   }
 }
