@@ -6,7 +6,7 @@ import {
   ValidationError,
 } from "../valueObjects/DomainError";
 import { OrderItem } from "./OrderItems";
-import { OrderStatus, OrderStatusValidator } from "./OrderStatus";
+import { OrderStatus, OrderStatusValidator } from "../valueObjects/OrderStatus";
 
 export interface OrderProps {
   id: string;
