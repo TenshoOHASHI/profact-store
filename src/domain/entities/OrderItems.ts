@@ -1,4 +1,3 @@
-// TODO: #16 注文機能の実装時に定義する
 import { Money } from "../valueObjects/Money";
 import { Quantity } from "../valueObjects/Quantity";
 
