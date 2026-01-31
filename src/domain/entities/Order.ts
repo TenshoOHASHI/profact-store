@@ -61,10 +61,6 @@ export class Order {
     }, new Money(0));
   }
 
-  get totalAmount(): Money {
-    return this.totalAmountIncludingTax;
-  }
-
   markAsPaid(paymentIntentId: string): void {
     if (!OrderStatusValidator.canTransition(this._status, OrderStatus.PAID)) {
       throw new BusinessRuleError(
