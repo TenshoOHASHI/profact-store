@@ -36,4 +36,10 @@ export class Money {
   format(): string {
     return `￥${this._value.toLocaleString("ja-JP")}`;
   }
+
+  withTax(taxRate: number = 0.1): Money {
+    const tax = this._value * taxRate; // tax
+    const total = this._value + tax; // price + tax
+    return new Money(total);
+  }
 }

@@ -39,6 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Generated JavaScript files in src
+src/**/*.js
 
 # prisma
 /src/generated/prisma
@@ -46,3 +48,8 @@ next-env.d.ts
 # test files
 #*.test.ts
 #__tests__/
+
+# test data
+*.test-data.ts
+*.test-data.js
+/test-data/
