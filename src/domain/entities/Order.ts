@@ -16,8 +16,6 @@ export interface OrderProps {
   status: OrderStatus;
   guestSessionId?: string;
   stripePaymentIntentId?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export class Order {
@@ -28,8 +26,6 @@ export class Order {
   private _status: OrderStatus;
   private readonly _guestSessionId?: string;
   private _stripePaymentIntentId?: string;
-  private readonly _createdAt: Date;
-  private readonly _updatedAt: Date;
 
   constructor(props: OrderProps) {
     if (props.items.length === 0) {
@@ -45,8 +41,6 @@ export class Order {
     this._status = props.status;
     this._guestSessionId = props.guestSessionId;
     this._stripePaymentIntentId = props.stripePaymentIntentId;
-    this._createdAt = props.createdAt;
-    this._updatedAt = props.updatedAt;
   }
 
   get totalAmountIncludingTax(): Money {
@@ -116,11 +110,5 @@ export class Order {
   }
   get stripePaymentIntentId(): string | undefined {
     return this._stripePaymentIntentId;
-  }
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-  get updatedAt(): Date {
-    return this._updatedAt;
   }
 }

@@ -84,8 +84,6 @@ export class PrsimaOrderRepository implements IOrderRepository {
       status: record.status as OrderStatus,
       stripePaymentIntentId: record.stripePaymentIntentId || undefined,
       guestSessionId: record.guestSessionId ?? undefined,
-      createdAt: record.createdAt,
-      updatedAt: record.updatedAt,
     });
   }
 
@@ -101,7 +99,6 @@ export class PrsimaOrderRepository implements IOrderRepository {
       guestSession: order.guestSessionId
         ? { connect: { id: order.guestSessionId } }
         : undefined,
-      createdAt: order.createdAt,
       items: {
         // Prisma: Use 'create' to generate nested OrderItem records
         create: order.items.map((item) => ({
