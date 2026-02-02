@@ -34,7 +34,6 @@ model Order {
   // remain Order data except guestSession of null
   guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
   status                OrderStatus   @default(PENDING)
-  totalAmount           Int           @map("total_amount")
   customerEmail         String        @map("customer_email")
   customerName          String        @map("customer_name")
   // paid -> success -> stripe return Id
