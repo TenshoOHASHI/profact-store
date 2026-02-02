@@ -34,11 +34,10 @@ model Order {
   // remain Order data except guestSession of null
   guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
   status                OrderStatus   @default(PENDING)
-  totalAmount           Int           @map("total_amount")
   customerEmail         String        @map("customer_email")
   customerName          String        @map("customer_name")
   // paid -> success -> stripe return Id
-  stripePaymentIntentId String        @map("stripe_payment_intent_id")
+  stripePaymentIntentId String?       @unique @map("stripe_payment_intent_id")
 
   // item -< orderItems
   items     OrderItem[]
@@ -64,9 +63,9 @@ model OrderItem {
   productId   String @map("product_id")
   productName String @map("product_name")
 
-  quantity Int
-  price    Int
-  taxRate  Float @default(0.1) @map("tax_rate")
+  quantity  Int
+  unitPrice Int   @map("unit_price")
+  taxRate   Float @default(0.1) @map("tax_rate")
 
   createdAt DateTime @default(now()) @map("created_at")
 
