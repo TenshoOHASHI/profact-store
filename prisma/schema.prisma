@@ -37,7 +37,7 @@ model Order {
   customerEmail         String        @map("customer_email")
   customerName          String        @map("customer_name")
   // paid -> success -> stripe return Id
-  stripePaymentIntentId String?       @map("stripe_payment_intent_id")
+  stripePaymentIntentId String?       @unique @map("stripe_payment_intent_id")
 
   // item -< orderItems
   items     OrderItem[]
