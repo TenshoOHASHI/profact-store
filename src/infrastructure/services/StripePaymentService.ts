@@ -1,5 +1,4 @@
 import { stripe } from "../stripe/stripeClient";
-import { Money } from "@/domain/valueObjects/Money";
 import {
   IPaymentService,
   CreatePaymentIntentParams,
@@ -10,8 +9,7 @@ export class StripePaymentService implements IPaymentService {
   async createPaymentIntent(
     params: CreatePaymentIntentParams,
   ): Promise<PaymentIntentResult> {
-    const money = new Money(params.amount);
-    const amountInYen = money.value;
+    const amountInYen = params.amount;
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInYen,
       currency: "jpy",
@@ -24,8 +22,12 @@ export class StripePaymentService implements IPaymentService {
       payment_method_types: ["card"],
     });
 
+    if (!paymentIntent.client_secret) {
+      throw new Error("Faild to get client_secret from Stripe");
+    }
+
     return {
-      clientSecret: paymentIntent.client_secret!,
+      clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
