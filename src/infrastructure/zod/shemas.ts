@@ -8,13 +8,15 @@ export const createPaymentIntentSchema = z.object({
     .max(999999, "Amount is too big"),
 
   orderId: z
-    .string({ error: "Order ID is required" })
+    .string({ error: "Order ID must be string" })
     .min(1, "Order ID is required"),
 
-  customerEmail: z.email("Invalid email format").max(255, "Email is too long"),
+  customerEmail: z
+    .email("Invalid email format and must be string")
+    .max(255, "Email is too long"),
 
   customerName: z
-    .string({ error: "Name is required" })
+    .string({ error: "Name must be string" })
     .min(1, "Name is required")
     .max(100, "Name is too long"),
 });
