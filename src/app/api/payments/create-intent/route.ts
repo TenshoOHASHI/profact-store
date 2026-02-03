@@ -1,27 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { StripePaymentService } from "@/infrastructure/services/StripePaymentService";
+import { createPaymentIntentSchema } from "@/infrastructure/zod/shemas";
+import z from "zod";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { amount, orderId, customerEmail, customerName } = body;
-    const paymentService = new StripePaymentService();
-    const result = await paymentService.createPaymentIntent({
-      amount,
-      orderId,
-      customerEmail,
-      customerName,
-    });
 
+    // Validation
+    const validationData = createPaymentIntentSchema.parse(body);
+
+    const paymentService = new StripePaymentService();
+
+    const result = await paymentService.createPaymentIntent(validationData);
     return NextResponse.json({
       success: true,
       data: result,
     });
   } catch (error) {
-    console.log("Payment intent error:", error);
-    NextResponse.json(
+    if (error instanceof z.ZodError) {
+      const treeified = z.treeifyError(error);
+
+      return NextResponse.json(
+        {
+          error: "Validation Error",
+          errors: treeified,
+        },
+        { status: 400 },
+      );
+    }
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Failed to create payment intent";
+
+    return NextResponse.json(
       {
-        error: "Failed to create payment intent",
+        error: errorMessage,
+        ...(process.env.NODE_ENV === "development" && { details: error }),
       },
       { status: 500 },
     );
