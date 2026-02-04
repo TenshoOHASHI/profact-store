@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StripePaymentService } from "@/infrastructure/services/StripePaymentService";
-import { createPaymentIntentSchema } from "@/infrastructure/zod/shemas";
+import { StripePaymentService } from "@/infrastructure/stripe/StripePaymentService";
+import { CreatePaymentIntentUseCase } from "@/application/useCases/payment/createPaymentIntent";
+import { createPaymentIntentSchema } from "@/infrastructure/zod/createPaymentSchema";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -16,7 +17,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const paymentService = new StripePaymentService();
-    const response = await paymentService.createPaymentIntent(result.data);
+    const createPaymentIntentUseCase = new CreatePaymentIntentUseCase(
+      paymentService,
+    );
+    const response = await createPaymentIntentUseCase.execute(result.data);
 
     return NextResponse.json({
       success: true,

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,8 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// add cart -> check cookie -> token exists -> add to the same cart
-// add cart -> check cookie -> not exists -> create new token -> add to new cart
 model GuestSession {
   id        String   @id @default(cuid())
   email     String?
@@ -21,30 +13,23 @@ model GuestSession {
   expiredAt DateTime @map("expired_at")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  orders Order[]
+  orders    Order[]
 
   @@map("guest_sessions")
 }
 
 model Order {
   id                    String        @id @default(cuid())
-  // token <-> settionId -> remain cart
-  guestSessionId        String?
-  // remain Order data except guestSession of null
-  guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id], onDelete: SetNull)
   status                OrderStatus   @default(PENDING)
+  createdAt             DateTime      @default(now()) @map("created_at")
   customerEmail         String        @map("customer_email")
   customerName          String        @map("customer_name")
-  // paid -> success -> stripe return Id
   stripePaymentIntentId String?       @unique @map("stripe_payment_intent_id")
+  updatedAt             DateTime      @updatedAt @map("updated_at")
+  guestSessionId        String?
+  items                 OrderItem[]
+  guestSession          GuestSession? @relation(fields: [guestSessionId], references: [id])
 
-  // item -< orderItems
-  items     OrderItem[]
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
-
-  // Search Index
   @@index([guestSessionId])
   @@index([status])
   @@index([customerEmail])
@@ -52,52 +37,40 @@ model Order {
   @@map("orders")
 }
 
-// Which item and who order come from?
 model OrderItem {
   /// アイテムID（CUID）
-  id      String @id @default(cuid())
-  orderId String @map("order_id")
-  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  quantity    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  orderId     String   @map("order_id")
+  productId   String   @map("product_id")
+  productName String   @map("product_name")
+  taxRate     Float    @default(0.1) @map("tax_rate")
+  unitPrice   Int      @map("unit_price")
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  // Snap shot
-  productId   String @map("product_id")
-  productName String @map("product_name")
-
-  quantity  Int
-  unitPrice Int   @map("unit_price")
-  taxRate   Float @default(0.1) @map("tax_rate")
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  /// 検索用インデックス
   @@index([orderId])
   @@map("order_items")
 }
 
-// state transition of order
+model Admin {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  name           String?
+  role           AdminRole @default(ADMIN)
+  hashedPassword String    @map("hashed_password")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@map("admins")
+}
+
 enum OrderStatus {
   PENDING
   PAID
   FAILED
   REFUNDED
-}
-
-model Admin {
-  id String @id @default(uuid())
-
-  email        String @unique
-  passwordHash String @map("password_hash")
-
-  name      String
-  role      AdminRole @default(ADMIN)
-  /// 作成日時
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  /// 更新日時
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@index([email])
-  @@map("admins")
 }
 
 enum AdminRole {
