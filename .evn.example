@@ -1,0 +1,10 @@
+# .env.example - テンプレート（コミット用）
+DATABASE_URL="postgresql://user:password@localhost:5432/guest_purchase"
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+JWT_SECRET="change-me-in-production"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+GUEST_SESSION_EXPIRY_HOURS=24
+NODE_ENV="development"
+STRIPE_SECRET_KEY="sk_test_"
