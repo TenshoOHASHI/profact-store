@@ -3,7 +3,7 @@ import { PrismaAdminRepository } from "@/infrastructure/repositories/PrismaAdmin
 import { PasswordService } from "@/infrastructure/auth/PasswordService";
 import { JwtService } from "@/infrastructure/auth/JwtService";
 import { LoginAdminUseCase } from "@/application/useCases/auth/loginAdmin";
-import { loginSchema } from "@/infrastructure/zod/passwordSchema";
+import { loginSchema } from "@/infrastructure/zod/authSchemas";
 
 export async function POST(request: NextRequest) {
   try {
