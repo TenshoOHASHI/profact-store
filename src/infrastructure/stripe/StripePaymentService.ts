@@ -23,7 +23,7 @@ export class StripePaymentService implements IPaymentService {
     });
 
     if (!paymentIntent.client_secret) {
-      throw new Error("Faild to get client_secret from Stripe");
+      throw new Error("Failed to get client_secret from Stripe");
     }
 
     return {

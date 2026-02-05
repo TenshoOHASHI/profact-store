@@ -4,4 +4,5 @@ export interface IAdminRepository {
   findByEmail(email: string): Promise<Admin | null>;
   findById(id: string): Promise<Admin | null>;
   save(admin: Admin): Promise<void>;
+  existsByEmail(email: string): Promise<boolean>;
 }
