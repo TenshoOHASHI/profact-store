@@ -56,7 +56,7 @@ model OrderItem {
 model Admin {
   id             String    @id @default(uuid())
   email          String    @unique
-  name           String?
+  name           String
   role           AdminRole @default(ADMIN)
   hashedPassword String    @map("hashed_password")
   createdAt      DateTime  @default(now()) @map("created_at")

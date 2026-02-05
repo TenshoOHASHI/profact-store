@@ -15,6 +15,7 @@ export class PrismaAdminRepository implements IAdminRepository {
     return new Admin({
       id: adminData.id,
       email: new Email(adminData.email),
+      name: adminData.name,
       hashedPassword: adminData.hashedPassword,
       createdAt: adminData.createdAt,
     });
@@ -30,7 +31,9 @@ export class PrismaAdminRepository implements IAdminRepository {
     return new Admin({
       id: adminData.id,
       email: new Email(adminData.email),
+      name: adminData.name,
       hashedPassword: adminData.hashedPassword,
+      createdAt: adminData.createdAt,
     });
   }
 
@@ -41,10 +44,13 @@ export class PrismaAdminRepository implements IAdminRepository {
         id: admin.id,
         email: admin.email.value,
         hashedPassword: admin.hashedPassword,
+        name: admin.name,
+        createdAt: admin.createdAt,
       },
       update: {
         email: admin.email.value,
         hashedPassword: admin.hashedPassword,
+        name: admin.name,
       },
     });
   }

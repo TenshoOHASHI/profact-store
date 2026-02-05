@@ -10,12 +10,22 @@ export const passwordSchema = z
   .regex(/[0-9]/, "パスワードには数字（0-9）を含めてください");
 
 export const emailSchema = z.email("有効なメールアドレスを指定してください");
+export const nameSchema = z
+  .string("名前は必須です")
+  .trim()
+  .min(1, "名前を入力してください");
 
 export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
 
+export const registerSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+  name: nameSchema,
+});
 export type PasswordInput = z.infer<typeof passwordSchema>;
 export type EmailInput = z.infer<typeof emailSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;

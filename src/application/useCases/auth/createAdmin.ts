@@ -9,11 +9,15 @@ export class CreateAdminUseCase {
     private passwordService: PasswordService,
   ) {}
 
-  async execute(email: string, plainPassword: string): Promise<Admin> {
+  async execute(
+    email: string,
+    plainPassword: string,
+    name: string,
+  ): Promise<Admin> {
     const emailValue = new Email(email);
     const hashedPassword = await this.passwordService.hash(plainPassword);
 
-    const admin = Admin.create(emailValue, hashedPassword);
+    const admin = Admin.create(emailValue, hashedPassword, name);
 
     await this.adminRepository.save(admin);
 

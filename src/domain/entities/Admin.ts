@@ -3,17 +3,17 @@ import { Email } from "../valueObjects/Email";
 export interface AdminProps {
   id: string;
   email: Email;
-  name?: string;
+  name: string;
   hashedPassword: string;
-  createdAt?: Date;
+  createdAt: Date;
 }
 
 export class Admin {
   private readonly _id: string;
   private readonly _email: Email;
-  private readonly _name?: string;
+  private readonly _name: string;
   private readonly _hashedPassword: string;
-  private readonly _createdAt?: Date;
+  private readonly _createdAt: Date;
 
   constructor(props: AdminProps) {
     this._id = props.id;
@@ -23,11 +23,13 @@ export class Admin {
     this._createdAt = props.createdAt;
   }
 
-  static create(email: Email, hashedPassword: string): Admin {
+  static create(email: Email, hashedPassword: string, name: string): Admin {
     return new Admin({
       id: crypto.randomUUID(),
       email,
       hashedPassword,
+      name,
+      createdAt: new Date(),
     });
   }
 
@@ -47,10 +49,10 @@ export class Admin {
   get email(): Email {
     return this._email;
   }
-  get name(): string | undefined {
+  get name(): string {
     return this._name;
   }
-  get createdAt(): Date | undefined {
+  get createdAt(): Date {
     return this._createdAt;
   }
   get hashedPassword(): string {
